@@ -1,11 +1,19 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
+import carsData from "../cars.json";
+
+interface Car {
+    id: number;
+    brand: string;
+    model: string;
+    pricePerDay: number;
+    location: string;
+    available: boolean;
+}
 
 interface Rental {
     id: string;
-    carName: string;
-    carBrand: string;
-    carImage: string;
+    carId: number;
     startDate: string;
     endDate: string;
     status: 'active' | 'upcoming' | 'completed';
@@ -17,57 +25,67 @@ interface Rental {
 export default function Rentals() {
     const [selectedTab, setSelectedTab] = useState<'active' | 'upcoming' | 'completed'>('active');
 
-    // Mock data - replace with your API call
+    // Mock rental data - replace with your API call
+    // This links to the cars from cars.json
     const rentals: Rental[] = [
         {
             id: '1',
-            carName: 'Model S',
-            carBrand: 'Tesla',
-            carImage: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400',
+            carId: 5, // Tesla Model 3
             startDate: '2025-10-02',
             endDate: '2025-10-06',
             status: 'active',
-            totalPrice: 480,
-            pickupLocation: 'Svendborg',
-            returnLocation: 'Svendborg',
-        },
-        {
-            id: '2',
-            carName: 'Wrangler',
-            carBrand: 'Jeep',
-            carImage: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400',
-            startDate: '2025-10-10',
-            endDate: '2025-10-15',
-            status: 'upcoming',
-            totalPrice: 475,
+            totalPrice: 500,
             pickupLocation: 'Copenhagen',
             returnLocation: 'Copenhagen',
         },
         {
-            id: '3',
-            carName: 'Civic',
-            carBrand: 'Honda',
-            carImage: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400',
-            startDate: '2025-09-20',
-            endDate: '2025-09-25',
-            status: 'completed',
-            totalPrice: 325,
-            pickupLocation: 'Aarhus',
-            returnLocation: 'Aarhus',
-        },
-        {
-            id: '4',
-            carName: '911 Carrera',
-            carBrand: 'Porsche',
-            carImage: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400',
-            startDate: '2025-08-15',
-            endDate: '2025-08-17',
-            status: 'completed',
+            id: '2',
+            carId: 1, // BMW X5
+            startDate: '2025-10-10',
+            endDate: '2025-10-15',
+            status: 'upcoming',
             totalPrice: 500,
             pickupLocation: 'Odense',
             returnLocation: 'Odense',
         },
+        {
+            id: '3',
+            carId: 6, // Toyota Corolla
+            startDate: '2025-09-20',
+            endDate: '2025-09-25',
+            status: 'completed',
+            totalPrice: 300,
+            pickupLocation: 'Odense',
+            returnLocation: 'Odense',
+        },
+        {
+            id: '4',
+            carId: 4, // Mercedes C-Class
+            startDate: '2025-08-15',
+            endDate: '2025-08-17',
+            status: 'completed',
+            totalPrice: 240,
+            pickupLocation: 'Odense',
+            returnLocation: 'Odense',
+        },
     ];
+
+    const getCar = (carId: number): Car | undefined => {
+        return carsData.find((car) => car.id === carId);
+    };
+
+    //Billeder random kan fjernes hvis vi selv har nogen
+    const getCarImage = (brand: string): string => {
+        const imageMap: { [key: string]: string } = {
+            'BMW': 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400',
+            'Volkswagen': 'https://images.unsplash.com/photo-1622353219448-46a009f0d44f?w=400',
+            'Audi': 'https://images.unsplash.com/photo-1610768764270-790fbec18178?w=400',
+            'Mercedes': 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400',
+            'Tesla': 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400',
+            'Toyota': 'https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?w=400',
+        };
+        return imageMap[brand] || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400';
+    };
 
     const filteredRentals = rentals.filter((rental) => rental.status === selectedTab);
 
@@ -153,74 +171,79 @@ export default function Rentals() {
             {/* Rentals List */}
             <ScrollView className="flex-1 px-4 py-4">
                 {filteredRentals.length > 0 ? (
-                    filteredRentals.map((rental) => (
-                        <View key={rental.id} className="bg-white rounded-2xl mb-4 shadow-sm overflow-hidden">
-                            <View className="flex-row">
-                                <Image
-                                    source={{ uri: rental.carImage }}
-                                    className="w-32 h-32"
-                                    resizeMode="cover"
-                                />
+                    filteredRentals.map((rental) => {
+                        const car = getCar(rental.carId);
+                        if (!car) return null;
 
-                                <View className="flex-1 p-4">
-                                    <View className="flex-row justify-between items-start mb-2">
-                                        <View>
-                                            <Text className="text-lg font-bold text-gray-800">
-                                                {rental.carBrand} {rental.carName}
-                                            </Text>
-                                            <View className={`mt-1 px-2 py-1 rounded-full self-start ${getStatusColor(rental.status)}`}>
-                                                <Text className="text-xs font-semibold capitalize">
-                                                    {rental.status}
+                        return (
+                            <View key={rental.id} className="bg-white rounded-2xl mb-4 shadow-sm overflow-hidden">
+                                <View className="flex-row">
+                                    <Image
+                                        source={{ uri: getCarImage(car.brand) }}
+                                        className="w-32 h-32"
+                                        resizeMode="cover"
+                                    />
+
+                                    <View className="flex-1 p-4">
+                                        <View className="flex-row justify-between items-start mb-2">
+                                            <View>
+                                                <Text className="text-lg font-bold text-gray-800">
+                                                    {car.brand} {car.model}
                                                 </Text>
+                                                <View className={`mt-1 px-2 py-1 rounded-full self-start ${getStatusColor(rental.status)}`}>
+                                                    <Text className="text-xs font-semibold capitalize">
+                                                        {rental.status}
+                                                    </Text>
+                                                </View>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
 
-                            <View className="px-4 pb-4">
-                                {/* Date Range */}
-                                <View className="bg-gray-50 rounded-xl p-3 mb-3">
-                                    <View className="flex-row justify-between items-center mb-2">
-                                        <View>
-                                            <Text className="text-xs text-gray-500 mb-1">Pick-up</Text>
-                                            <Text className="text-sm font-semibold text-gray-800">
-                                                {formatDate(rental.startDate)}
-                                            </Text>
-                                        </View>
-                                        <Text className="text-gray-400 mx-2">→</Text>
-                                        <View>
-                                            <Text className="text-xs text-gray-500 mb-1">Return</Text>
-                                            <Text className="text-sm font-semibold text-gray-800">
-                                                {formatDate(rental.endDate)}
-                                            </Text>
+                                <View className="px-4 pb-4">
+                                    {/* Date Range */}
+                                    <View className="bg-gray-50 rounded-xl p-3 mb-3">
+                                        <View className="flex-row justify-between items-center mb-2">
+                                            <View>
+                                                <Text className="text-xs text-gray-500 mb-1">Pick-up</Text>
+                                                <Text className="text-sm font-semibold text-gray-800">
+                                                    {formatDate(rental.startDate)}
+                                                </Text>
+                                            </View>
+                                            <Text className="text-gray-400 mx-2">→</Text>
+                                            <View>
+                                                <Text className="text-xs text-gray-500 mb-1">Return</Text>
+                                                <Text className="text-sm font-semibold text-gray-800">
+                                                    {formatDate(rental.endDate)}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
 
-                                {/* Location */}
-                                <View className="mb-3">
-                                    <Text className="text-xs text-gray-500 mb-1">📍 Location</Text>
-                                    <Text className="text-sm text-gray-700">{rental.pickupLocation}</Text>
-                                </View>
-
-                                {/* Price and Action */}
-                                <View className="flex-row justify-between items-center">
-                                    <View>
-                                        <Text className="text-xs text-gray-500">Total Price</Text>
-                                        <Text className="text-xl font-bold text-blue-600">${rental.totalPrice}</Text>
+                                    {/* Location */}
+                                    <View className="mb-3">
+                                        <Text className="text-xs text-gray-500 mb-1">📍 Location</Text>
+                                        <Text className="text-sm text-gray-700">{rental.pickupLocation}</Text>
                                     </View>
 
-                                    <TouchableOpacity
-                                        onPress={() => handleViewDetails(rental.id)}
-                                        className="bg-blue-500 px-6 py-2 rounded-xl"
-                                    >
-                                        <Text className="text-white font-semibold">View Details</Text>
-                                    </TouchableOpacity>
+                                    {/* Price and Action */}
+                                    <View className="flex-row justify-between items-center">
+                                        <View>
+                                            <Text className="text-xs text-gray-500">Total Price</Text>
+                                            <Text className="text-xl font-bold text-blue-600">${rental.totalPrice}</Text>
+                                        </View>
+
+                                        <TouchableOpacity
+                                            onPress={() => handleViewDetails(rental.id)}
+                                            className="bg-blue-500 px-6 py-2 rounded-xl"
+                                        >
+                                            <Text className="text-white font-semibold">View Details</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    ))
+                        );
+                    })
                 ) : (
                     <View className="flex-1 justify-center items-center py-20">
                         <Text className="text-6xl mb-4">🚗</Text>
