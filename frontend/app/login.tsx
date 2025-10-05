@@ -7,13 +7,13 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 
 export default function Profile() {
   const { user, login, logout } = useAuth();
   const [username, setUsername] = useState("");
-  const bgImage = require("../../assets/images/login-bg.jpg");
+  const bgImage = require("@/assets/images/login-bg.jpg");
 
   if (user) {
     return (

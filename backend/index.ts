@@ -1,6 +1,7 @@
 import express from 'express';
 import carsRouter from './routes/cars.js';
 import statusRouter from './routes/status.js';
+import authRouter from './routes/auth.js';
 import { disconnectPrisma } from './utils/prisma.js';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 // Routes
 app.use('/', statusRouter);
 app.use('/', carsRouter);
+app.use('/', authRouter);
 
 // Start the server
 app.listen(PORT, async () => {

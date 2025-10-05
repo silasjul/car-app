@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
-import { Car } from '../schema/car.js';
+import { Car } from '../schemas/car.js';
+import { requireAuth } from '../utils/auth.js';
 import { prisma } from '../utils/prisma.js';
 
 const router = Router();
@@ -37,7 +38,7 @@ router.get('/cars/:id', async (req: Request, res: Response) => {
 });
 
 // POST a new car
-router.post('/cars', async (req: Request, res: Response) => {
+router.post('/cars', requireAuth, async (req: Request, res: Response) => {
   try {
     const validatedData = Car.parse(req.body);
     const { id, ...createData } = validatedData;
