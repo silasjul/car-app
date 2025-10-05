@@ -1,4 +1,4 @@
-import { CarPreviewData } from "@/types/car";
+import { CarPreviewData, CarDetailsData } from "@/types/car";
 
 export const cars: CarPreviewData[] = [
   {
@@ -36,5 +36,22 @@ export const cars: CarPreviewData[] = [
     image: 'car-4.jpg',
     availableFrom: '2025-02-09',
     availableTo: '2025-11-23',
+  },
+];
+
+export const carDetails: CarDetailsData[] = [
+  {
+    id: '1',
+    name: 'Tesla Model 3',
+    location: 'Odense',
+    price: 50,
+    image: 'car-1.jpg',
+    availableFrom: '2025-01-01',
+    availableTo: '2025-12-31',
+    description: 'A sleek electric car with autopilot features.',
+    features: ['Autopilot', 'Supercharger access', 'Large touchscreen'],
+    mileage: 15000,
+    fuelType: 'Electric',
+    transmission: 'Automatic',
   },
 ];

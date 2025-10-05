@@ -1,15 +1,23 @@
 import { CarPreviewData } from '@/types/car'
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
+const imageMap: Record<string, any> = {
+  'car-1.jpg': require('@/assets/images/car-1.jpg'),
+  'car-2.jpg': require('@/assets/images/car-2.jpg'),
+  'car-3.jpg': require('@/assets/images/car-3.jpg'),
+  'car-4.jpg': require('@/assets/images/car-4.jpg'),
+};
 
 interface CarPreviewProps {
   carData: CarPreviewData
+  onPress?: () => void
 }
 
-export default function CarPreviewCard({ carData }: CarPreviewProps) {
+export default function CarPreviewCard({ carData, onPress }: CarPreviewProps) {
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: carData.image }} style={styles.image} />
+    <TouchableOpacity onPress={onPress} style={styles.card}>
+      <Image source={imageMap[carData.image]} style={styles.image} />
       <View style={styles.details}>
         <Text style={styles.name}>{carData.name}</Text>
         <Text style={styles.location}>{carData.location}</Text>
@@ -18,7 +26,7 @@ export default function CarPreviewCard({ carData }: CarPreviewProps) {
           Available: {carData.availableFrom} - {carData.availableTo}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

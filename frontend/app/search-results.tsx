@@ -1,11 +1,12 @@
 import CarPreviewCard from '@/components/CarPreviewCard';
 import { cars } from '@/mocks/cars';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 
 export default function SearchResults() {
   const params = useLocalSearchParams();
+  const router = useRouter();
   const { location, startTime, endTime } = params;
 
   return (
@@ -24,7 +25,7 @@ export default function SearchResults() {
       <ScrollView style={styles.resultsContainer}>
         <Stack.Screen options={{ title: 'Search Results' }} />
         {cars.map((car, idx) => (
-          <CarPreviewCard key={idx} carData={car} />
+          <CarPreviewCard key={idx} carData={car} onPress={() => router.push(`/car-details?id=${car.id}`)} />
         ))}
       </ScrollView>
     </View>
