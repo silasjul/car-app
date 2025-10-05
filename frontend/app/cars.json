@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "brand": "BMW",
+    "model": "X5",
+    "pricePerDay": 100,
+    "location": "Odense",
+    "available": true
+  },
+  {
+    "id": 2,
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "pricePerDay": 50,
+    "location": "Odense",
+    "available": false
+  },
+  {
+    "id": 3,
+    "brand": "Audi",
+    "model": "A4",
+    "pricePerDay": 70,
+    "location": "Aarhus",
+    "available": true
+  },
+  {
+    "id": 4,
+    "brand": "Mercedes",
+    "model": "C-Class",
+    "pricePerDay": 120,
+    "location": "Odense",
+    "available": true
+  },
+  {
+    "id": 5,
+    "brand": "Tesla",
+    "model": "Model 3",
+    "pricePerDay": 125,
+    "location": "Copenhagen",
+    "available": false
+  },
+  {
+    "id": 6,
+    "brand": "Toyota",
+    "model": "Corolla",
+    "pricePerDay": 60,
+    "location": "Odense",
+    "available": true
+  },
+  {
+    "id": 7,
+    "brand": "BMW",
+    "model": "3 Series",
+    "pricePerDay": 90,
+    "location": "Odense",
+    "available": true
+  },
+  {
+    "id": 8,
+    "brand": "Audi",
+    "model": "Q7",
+    "pricePerDay": 130,
+    "location": "Aarhus",
+    "available": false
+  },
+  {
+    "id": 9,
+    "brand": "Volkswagen",
+    "model": "Passat",
+    "pricePerDay": 60,
+    "location": "Odense",
+    "available": true
+  },
+  {
+    "id": 10,
+    "brand": "Mercedes",
+    "model": "E-Class",
+    "pricePerDay": 150,
+    "location": "Copenhagen",
+    "available": true
+  }
+]
