@@ -1,5 +1,5 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -18,7 +18,6 @@ export default function DatePicker({ buttonText, buttonStyle, time: startTime, s
     if (event.type === 'dismissed') {
       setShow(false);
     } else if (selectedTime) {
-      console.log('Selected time:',);
       setStartTime(selectedTime);
       setShow(false);
       setSelectedTime(selectedTime.toLocaleDateString());
@@ -58,3 +57,4 @@ export default function DatePicker({ buttonText, buttonStyle, time: startTime, s
     </View>
   )
 }
+

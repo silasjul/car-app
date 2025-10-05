@@ -1,3 +1,4 @@
+import cars from "@/mocks/cars.json";
 import { useState } from "react";
 import {
   FlatList,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import cars from "../cars.json";
 
 type Car = {
   id: number;

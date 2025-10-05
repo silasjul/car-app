@@ -1,6 +1,6 @@
 import { CarPreviewData } from '@/types/car'
 import React from 'react'
-import { Text, View, Image, StyleSheet } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 interface CarPreviewProps {
   carData: CarPreviewData
