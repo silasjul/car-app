@@ -1,0 +1,4 @@
+node_modules
+generated
+
+# Normally would also add .env, but we got nothing to hide ;)
