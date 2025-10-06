@@ -32,6 +32,8 @@ model Car {
   mileage        Int
   fuelType       String
   transmission   String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -41,4 +43,5 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+  cars      Car[]
 }

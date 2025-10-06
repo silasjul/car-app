@@ -1,19 +1,32 @@
+import DatePicker from '@/components/DatePicker';
+import useCars from '@/hooks/useCars';
+import useMyCars from '@/hooks/useMyCars';
+import useUser from '@/hooks/useUser';
+import { CreateCarData } from '@/types/car';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ListCar() {
+  const { user } = useUser()
+  const { addCar } = useCars();
+  const { myCars } = useMyCars()
   const [brand, setBrand] = useState('')
   const [model, setModel] = useState('')
   const [year, setYear] = useState('')
   const [price, setPrice] = useState('')
   const [location, setLocation] = useState('')
-  const [details, setDetails] = useState('')
+  const [description, setDescription] = useState('')
+  const [features, setFeatures] = useState('')
+  const [mileage, setMileage] = useState('')
+  const [fuelType, setFuelType] = useState('')
+  const [transmission, setTransmission] = useState('')
+  const [availableFrom, setAvailableFrom] = useState<Date | null>(null)
+  const [availableTo, setAvailableTo] = useState<Date | null>(null)
 
-  const [listedCars, setListedCars] = useState<any[]>([])
-  const [images, setImages] = useState<string[]>([])
+  const [image, setImage] = useState<string>('')
 
-  const pickImages = async () => {
+  const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert("Permission required", "Camera roll permisions is required for uploading images.")
@@ -22,46 +35,58 @@ export default function ListCar() {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
-      allowsMultipleSelection: true,
+      allowsMultipleSelection: false,
       quality: 0.7
 
     })
 
     if (!result.canceled) {
-      setImages(prev => [...result.assets.map(asset => asset.uri)]);
-      Alert.alert("Succes", `${result.assets.length} image(s) have been uploaded!`)
+      setImage(result.assets[0].uri);
+      Alert.alert("Success", "Image has been uploaded!")
     }
   }
 
   const handleSubmit = () => {
-    if (!brand || !model || !year || !price || !location || !details) {
+    if (!user?.id) {
+      Alert.alert("Error", "User not authenticated");
+      return;
+    }
+    if (!brand || !model || !year || !price || !location || !description || !availableFrom || !availableTo || !features || !mileage || !fuelType || !transmission || !image) {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
 
-    const newCar = {
-      id: Date.now(),
-      brand: brand,
-      model: model,
-      year: year,
-      price: price,
+    const carData: CreateCarData = {
+      name: `${year} ${brand} ${model}`,
       location: location,
-      details: details,
-      listedAt: new Date().toLocaleDateString(),
-      images: images
+      price: parseFloat(price),
+      image: image,
+      availableFrom: availableFrom!.toISOString(),
+      availableTo: availableTo!.toISOString(),
+      description: description,
+      features: features.split(',').map(f => f.trim()).filter(f => f.length > 0),
+      mileage: parseInt(mileage),
+      fuelType: fuelType,
+      transmission: transmission,
     }
-    setListedCars(prevCars => [...prevCars, newCar])
-
+    addCar(carData);
+    
     //Resetting fields after submission
     setBrand('')
     setModel('')
     setYear('')
     setPrice('')
     setLocation('')
-    setDetails('')
-    setImages([])
+    setDescription('')
+    setFeatures('')
+    setMileage('')
+    setFuelType('')
+    setTransmission('')
+    setAvailableFrom(null)
+    setAvailableTo(null)
+    setImage('')
 
-    Alert.alert("Car has been listed", `Your ${year} ${brand} in ${location} has now been listed for ${price} per day`);
+    Alert.alert("Car has been listed", `Your ${year} ${brand} in ${location} has now been listed for $${price} per day`);
   };
 
   return (
@@ -131,13 +156,79 @@ export default function ListCar() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.label}>Car Equipment</Text>
+          <Text style={styles.label}>Description</Text>
           <TextInput
-            placeholder="e.g. Air conditioning, Sunroof"
-            value={details}
-            onChangeText={setDetails}
+            placeholder="e.g. Well maintained car with low mileage"
+            value={description}
+            onChangeText={setDescription}
             style={styles.input}
             placeholderTextColor="#9CA3AF"
+            multiline
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Features (comma separated)</Text>
+          <TextInput
+            placeholder="e.g. Air conditioning, Sunroof, GPS, Bluetooth"
+            value={features}
+            onChangeText={setFeatures}
+            style={styles.input}
+            placeholderTextColor="#9CA3AF"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Mileage</Text>
+          <TextInput
+            placeholder="e.g. 50000"
+            value={mileage}
+            onChangeText={setMileage}
+            keyboardType="numeric"
+            style={styles.input}
+            placeholderTextColor="#9CA3AF"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Fuel Type</Text>
+          <TextInput
+            placeholder="e.g. Gasoline, Diesel, Electric"
+            value={fuelType}
+            onChangeText={setFuelType}
+            style={styles.input}
+            placeholderTextColor="#9CA3AF"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Transmission</Text>
+          <TextInput
+            placeholder="e.g. Manual, Automatic"
+            value={transmission}
+            onChangeText={setTransmission}
+            style={styles.input}
+            placeholderTextColor="#9CA3AF"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Available From</Text>
+          <DatePicker
+            buttonText="Select start date"
+            buttonStyle={styles.input}
+            time={availableFrom}
+            setTime={setAvailableFrom}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Available To</Text>
+          <DatePicker
+            buttonText="Select end date"
+            buttonStyle={styles.input}
+            time={availableTo}
+            setTime={setAvailableTo}
           />
         </View>
 
@@ -145,29 +236,23 @@ export default function ListCar() {
           <TouchableOpacity
             style={styles.uploadButton}
             activeOpacity={0.7}
-            onPress={pickImages} >
+            onPress={pickImage} >
             <Text style={styles.uploadText}>
-              Upload images of the car {images.length > 0 ? `(${images.length} selected)` : ''}
+              Upload image of the car {image ? '(1 selected)' : ''}
             </Text>
           </TouchableOpacity>
 
-          {images.length > 0 && (
-            <ScrollView horizontal style={styles.imageScroll}>
-              <View style={styles.imageRow}>
-                {images.map((uri, index) => (
-                  <View key={index} style={styles.imageContainer}>
-                    <Image
-                      source={{ uri }}
-                      style={styles.image} />
-                    <TouchableOpacity
-                      style={styles.removeButton}
-                      onPress={() => setImages(prev => prev.filter((_, i) => i !== index))} >
-                      <Text style={styles.removeText}>x</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            </ScrollView>
+          {image && (
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: image }}
+                style={styles.image} />
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => setImage('')} >
+                <Text style={styles.removeText}>x</Text>
+              </TouchableOpacity>
+            </View>
           )}
 
 
@@ -181,43 +266,35 @@ export default function ListCar() {
         </View>
 
         <View style={styles.listedSection}>
-          <Text style={styles.listedTitle}> Your listed cars ({listedCars.length})</Text>
+          <Text style={styles.listedTitle}> Your listed cars ({myCars?.length || 0})</Text>
 
-          {listedCars.length === 0 ? (
+          {!myCars || myCars.length === 0 ? (
             <Text style={styles.noCarsText}>No cars has been listed yet.</Text>
           ) : (
-            listedCars.map((car) => (
+            myCars.map((car) => (
               <View key={car.id} style={styles.carCard}>
 
-                {car.images && car.images.length > 0 ? (
+                {car.image ? (
                   <View style={styles.imageSection}>
                     <Image
-                      source={{ uri: car.images[0] }}
+                      source={{ uri: car.image }}
                       style={styles.carImage}
                     />
-                    <Text style={styles.imageCount}>
-                      📸 {car.images.length} image{car.images.length > 1 ? 's' : ''}
-                    </Text>
                   </View>
                 ) : (
                   <View style={styles.noImagePlaceholder}>
-                    <Text style={styles.noImageText}>No images</Text>
+                    <Text style={styles.noImageText}>No image</Text>
                   </View>
                 )}
 
-                <Text style={styles.carTitle}>{car.year} {car.brand} {car.model}</Text>
+                <Text style={styles.carTitle}>{car.name}</Text>
                 <Text style={styles.carLocation}>Location: {car.location}</Text>
                 <Text style={styles.carPrice}>${car.price}/day</Text>
-                <Text style={styles.carListedAt}>Listed: {car.listedAt}</Text>
-
-                <TouchableOpacity
-                  style={styles.removeListingButton}
-                  onPress={() => {
-                    setListedCars(prevCars => prevCars.filter(c => c.id !== car.id))
-                  }}
-                >
-                  <Text style={styles.removeListingText}>Remove listing</Text>
-                </TouchableOpacity>
+                <Text style={styles.carMileage}>Mileage: {car.mileage} km</Text>
+                <Text style={styles.carFuelType}>Fuel: {car.fuelType}</Text>
+                <Text style={styles.carTransmission}>Transmission: {car.transmission}</Text>
+                <Text style={styles.carFeatures}>Features: {car.features.join(', ')}</Text>
+                <Text style={styles.carAvailable}>Available: {new Date(car.availableFrom).toLocaleDateString()} - {new Date(car.availableTo).toLocaleDateString()}</Text>
               </View>
             ))
           )}
@@ -327,7 +404,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   submitButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#000',
     borderRadius: 12,
     paddingVertical: 16,
     shadowColor: '#000',
@@ -409,6 +486,21 @@ const styles = StyleSheet.create({
   carListedAt: {
     color: '#9ca3af',
     fontSize: 14,
+  },
+  carMileage: {
+    color: '#4b5563',
+  },
+  carFuelType: {
+    color: '#4b5563',
+  },
+  carTransmission: {
+    color: '#4b5563',
+  },
+  carFeatures: {
+    color: '#4b5563',
+  },
+  carAvailable: {
+    color: '#4b5563',
   },
   removeListingButton: {
     backgroundColor: '#fee2e2',

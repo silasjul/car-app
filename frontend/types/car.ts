@@ -15,3 +15,5 @@ export interface CarDetailsData extends CarPreviewData {
   fuelType: string;
   transmission: string;
 }
+
+export type CreateCarData = Omit<CarDetailsData, 'id'>

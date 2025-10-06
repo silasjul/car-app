@@ -2,6 +2,7 @@ import { useAuth } from '@/hooks/useAuth'
 import useUser from '@/hooks/useUser'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Profile() {
   const { deleteToken } = useAuth()
@@ -13,37 +14,43 @@ export default function Profile() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text>Loading...</Text>
-      </View>
+      </SafeAreaView>
     )
   }
 
   if (error) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Error: {error}</Text>
-      </View>
+      </SafeAreaView>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <Text style={styles.label}>First Name:</Text>
-        <Text style={styles.value}>{user?.firstName}</Text>
+        <Text style={styles.label}>First Name</Text>
+        <View style={styles.valueContainer}>
+          <Text style={styles.value}>{user?.firstName}</Text>
+        </View>
 
-        <Text style={styles.label}>Last Name:</Text>
-        <Text style={styles.value}>{user?.lastName}</Text>
+        <Text style={styles.label}>Last Name</Text>
+        <View style={styles.valueContainer}>
+          <Text style={styles.value}>{user?.lastName}</Text>
+        </View>
 
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{user?.email}</Text>
+        <Text style={styles.label}>Email</Text>
+        <View style={styles.valueContainer}>
+          <Text style={styles.value}>{user?.email}</Text>
+        </View>
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -51,11 +58,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  signupText: {
+    letterSpacing: 1.5,
+    fontSize: 12,
+    color: 'gray',
+    fontFamily: 'Thin',
+    marginBottom: 2,
+  },
+  subtitleText: {
+    fontSize: 24,
+    marginBottom: 14,
+  },
+  valueContainer: {
+    backgroundColor: 'rgba(0,0,0, 0.1)',
+    fontFamily: 'Thin',
+    fontSize: 16,
+    padding: 14,
+    borderRadius: 8,
+    marginBottom: 20,
   },
   profileContainer: {
     flex: 1,
-    justifyContent: 'center',
   },
   label: {
     fontSize: 18,
@@ -64,14 +89,12 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    fontFamily: 'Book',
-    marginBottom: 20,
-    paddingLeft: 10,
+    fontFamily: 'Thin',
   },
   logoutButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 9999,
     alignItems: 'center',
     marginBottom: 20,
   },

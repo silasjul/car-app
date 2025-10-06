@@ -1,20 +1,13 @@
-import { carDetails } from '@/mocks/cars';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-const imageMap: Record<string, any> = {
-  'car-1.jpg': require('@/assets/images/car-1.jpg'),
-  'car-2.jpg': require('@/assets/images/car-2.jpg'),
-  'car-3.jpg': require('@/assets/images/car-3.jpg'),
-  'car-4.jpg': require('@/assets/images/car-4.jpg'),
-};
 
 export default function CarDetails() {
   const params = useLocalSearchParams();
   const router = useRouter();
-  const { id } = params;
+  const { carData } = params;
 
-  const car = carDetails[0];
+  const carDataStr = Array.isArray(carData) ? carData[0] : carData;
+  const car = JSON.parse(carDataStr);
 
   if (!car) {
     return (
@@ -34,7 +27,7 @@ export default function CarDetails() {
     <View style={styles.container}>
       <Stack.Screen options={{ title: car.name }} />
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
-        <Image source={imageMap[car.image]} style={styles.image} />
+        <Image source={{ uri: car.image }} style={styles.image} />
         <View style={styles.details}>
           <Text style={styles.name}>{car.name}</Text>
           <Text style={styles.location}>{car.location}</Text>
@@ -48,7 +41,7 @@ export default function CarDetails() {
           <Text style={styles.specs}>Fuel Type: {car.fuelType}</Text>
           <Text style={styles.specs}>Transmission: {car.transmission}</Text>
           <Text style={styles.subtitle}>Features:</Text>
-          {car.features.map((feature, index) => (
+          {car.features.map((feature: string, index: number) => (
             <Text key={index} style={styles.feature}>• {feature}</Text>
           ))}
         </View>
