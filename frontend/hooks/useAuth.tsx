@@ -47,6 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await SecureStore.setItemAsync('authToken', newToken);
     setToken(newToken)
     console.log("saved token")
+
+    // Redirect to welcome page
+    router.replace('/(tabs)')
   }
 
   const deleteToken = useCallback(async () => {
