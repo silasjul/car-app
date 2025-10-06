@@ -1,6 +1,6 @@
 import carsData from "@/mocks/cars.json";
 import { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface Car {
   id: number;
@@ -94,42 +94,27 @@ export default function Rentals() {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const getStatusColor = (status: string): string => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-700';
-      case 'upcoming':
-        return 'bg-blue-100 text-blue-700';
-      case 'completed':
-        return 'bg-gray-100 text-gray-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
-  };
-
   const handleViewDetails = (rentalId: string) => {
     console.log('View details for rental:', rentalId);
     // Navigate to rental details screen
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="bg-white px-4 pt-12 pb-4 shadow-sm">
-        <Text className="text-3xl font-bold text-gray-800">My Rentals</Text>
-        <Text className="text-gray-500 mt-1">Track your car rentals</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>My Rentals</Text>
+        <Text style={styles.subtitle}>Track your car rentals</Text>
       </View>
 
       {/* Tabs */}
-      <View className="bg-white px-4 py-3 border-b border-gray-200 flex-row justify-around">
+      <View style={styles.tabsContainer}>
         <TouchableOpacity
           onPress={() => setSelectedTab('active')}
-          className={`flex-1 py-2 border-b-2 ${selectedTab === 'active' ? 'border-blue-500' : 'border-transparent'
-            }`}
+          style={[styles.tabButton, selectedTab === 'active' ? styles.activeTab : styles.inactiveTab]}
         >
           <Text
-            className={`text-center font-semibold ${selectedTab === 'active' ? 'text-blue-500' : 'text-gray-500'
-              }`}
+            style={[styles.tabText, selectedTab === 'active' ? styles.activeTabText : styles.inactiveTabText]}
           >
             Active
           </Text>
@@ -137,12 +122,10 @@ export default function Rentals() {
 
         <TouchableOpacity
           onPress={() => setSelectedTab('upcoming')}
-          className={`flex-1 py-2 border-b-2 ${selectedTab === 'upcoming' ? 'border-blue-500' : 'border-transparent'
-            }`}
+          style={[styles.tabButton, selectedTab === 'upcoming' ? styles.activeTab : styles.inactiveTab]}
         >
           <Text
-            className={`text-center font-semibold ${selectedTab === 'upcoming' ? 'text-blue-500' : 'text-gray-500'
-              }`}
+            style={[styles.tabText, selectedTab === 'upcoming' ? styles.activeTabText : styles.inactiveTabText]}
           >
             Upcoming
           </Text>
@@ -150,12 +133,10 @@ export default function Rentals() {
 
         <TouchableOpacity
           onPress={() => setSelectedTab('completed')}
-          className={`flex-1 py-2 border-b-2 ${selectedTab === 'completed' ? 'border-blue-500' : 'border-transparent'
-            }`}
+          style={[styles.tabButton, selectedTab === 'completed' ? styles.activeTab : styles.inactiveTab]}
         >
           <Text
-            className={`text-center font-semibold ${selectedTab === 'completed' ? 'text-blue-500' : 'text-gray-500'
-              }`}
+            style={[styles.tabText, selectedTab === 'completed' ? styles.activeTabText : styles.inactiveTabText]}
           >
             Completed
           </Text>
@@ -163,29 +144,29 @@ export default function Rentals() {
       </View>
 
       {/* Rentals List */}
-      <ScrollView className="flex-1 px-4 py-4">
+      <ScrollView style={styles.scrollView}>
         {filteredRentals.length > 0 ? (
           filteredRentals.map((rental) => {
             const car = getCar(rental.carId);
             if (!car) return null;
 
             return (
-              <View key={rental.id} className="bg-white rounded-2xl mb-4 shadow-sm overflow-hidden">
-                <View className="flex-row">
+              <View key={rental.id} style={styles.rentalCard}>
+                <View style={styles.cardRow}>
                   <Image
                     source={{ uri: getCarImage(car.brand) }}
-                    className="w-32 h-32"
+                    style={styles.carImage}
                     resizeMode="cover"
                   />
 
-                  <View className="flex-1 p-4">
-                    <View className="flex-row justify-between items-start mb-2">
+                  <View style={styles.cardContent}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                       <View>
-                        <Text className="text-lg font-bold text-gray-800">
+                        <Text style={styles.carTitle}>
                           {car.brand} {car.model}
                         </Text>
-                        <View className={`mt-1 px-2 py-1 rounded-full self-start ${getStatusColor(rental.status)}`}>
-                          <Text className="text-xs font-semibold capitalize">
+                        <View style={[styles.statusBadge, rental.status === 'active' ? styles.statusActive : rental.status === 'upcoming' ? styles.statusUpcoming : styles.statusCompleted]}>
+                          <Text style={[styles.statusText, rental.status === 'active' ? styles.statusTextActive : rental.status === 'upcoming' ? styles.statusTextUpcoming : styles.statusTextCompleted]}>
                             {rental.status}
                           </Text>
                         </View>
@@ -194,20 +175,20 @@ export default function Rentals() {
                   </View>
                 </View>
 
-                <View className="px-4 pb-4">
+                <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
                   {/* Date Range */}
-                  <View className="bg-gray-50 rounded-xl p-3 mb-3">
-                    <View className="flex-row justify-between items-center mb-2">
+                  <View style={styles.dateSection}>
+                    <View style={styles.dateRow}>
                       <View>
-                        <Text className="text-xs text-gray-500 mb-1">Pick-up</Text>
-                        <Text className="text-sm font-semibold text-gray-800">
+                        <Text style={styles.dateLabel}>Pick-up</Text>
+                        <Text style={styles.dateText}>
                           {formatDate(rental.startDate)}
                         </Text>
                       </View>
-                      <Text className="text-gray-400 mx-2">→</Text>
+                      <Text style={styles.arrow}>→</Text>
                       <View>
-                        <Text className="text-xs text-gray-500 mb-1">Return</Text>
-                        <Text className="text-sm font-semibold text-gray-800">
+                        <Text style={styles.dateLabel}>Return</Text>
+                        <Text style={styles.dateText}>
                           {formatDate(rental.endDate)}
                         </Text>
                       </View>
@@ -215,23 +196,23 @@ export default function Rentals() {
                   </View>
 
                   {/* Location */}
-                  <View className="mb-3">
-                    <Text className="text-xs text-gray-500 mb-1">📍 Location</Text>
-                    <Text className="text-sm text-gray-700">{rental.pickupLocation}</Text>
+                  <View style={styles.locationSection}>
+                    <Text style={styles.locationLabel}>📍 Location</Text>
+                    <Text style={styles.locationText}>{rental.pickupLocation}</Text>
                   </View>
 
                   {/* Price and Action */}
-                  <View className="flex-row justify-between items-center">
+                  <View style={styles.priceActionRow}>
                     <View>
-                      <Text className="text-xs text-gray-500">Total Price</Text>
-                      <Text className="text-xl font-bold text-blue-600">${rental.totalPrice}</Text>
+                      <Text style={styles.priceLabel}>Total Price</Text>
+                      <Text style={styles.priceText}>${rental.totalPrice}</Text>
                     </View>
 
                     <TouchableOpacity
                       onPress={() => handleViewDetails(rental.id)}
-                      className="bg-blue-500 px-6 py-2 rounded-xl"
+                      style={styles.viewDetailsButton}
                     >
-                      <Text className="text-white font-semibold">View Details</Text>
+                      <Text style={styles.viewDetailsText}>View Details</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -239,10 +220,10 @@ export default function Rentals() {
             );
           })
         ) : (
-          <View className="flex-1 justify-center items-center py-20">
-            <Text className="text-6xl mb-4">🚗</Text>
-            <Text className="text-gray-400 text-lg font-semibold">No {selectedTab} rentals</Text>
-            <Text className="text-gray-400 text-sm mt-2">
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>🚗</Text>
+            <Text style={styles.emptyTitle}>No {selectedTab} rentals</Text>
+            <Text style={styles.emptySubtitle}>
               {selectedTab === 'active' && "You don't have any active rentals"}
               {selectedTab === 'upcoming' && "You don't have any upcoming rentals"}
               {selectedTab === 'completed' && "You haven't completed any rentals yet"}
@@ -253,3 +234,203 @@ export default function Rentals() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  header: {
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
+    paddingTop: 48,
+    paddingBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#1f2937',
+  },
+  subtitle: {
+    color: '#6b7280',
+    marginTop: 4,
+  },
+  tabsContainer: {
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderBottomWidth: 2,
+  },
+  activeTab: {
+    borderBottomColor: '#3b82f6',
+  },
+  inactiveTab: {
+    borderBottomColor: 'transparent',
+  },
+  tabText: {
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: '#3b82f6',
+  },
+  inactiveTabText: {
+    color: '#6b7280',
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  rentalCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 1,
+  },
+  cardRow: {
+    flexDirection: 'row',
+  },
+  carImage: {
+    width: 128,
+    height: 128,
+  },
+  cardContent: {
+    flex: 1,
+    padding: 16,
+  },
+  carTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1f2937',
+  },
+  statusBadge: {
+    marginTop: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 50,
+    alignSelf: 'flex-start',
+  },
+  statusActive: {
+    backgroundColor: '#dcfce7',
+  },
+  statusUpcoming: {
+    backgroundColor: '#dbeafe',
+  },
+  statusCompleted: {
+    backgroundColor: '#f3f4f6',
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  statusTextActive: {
+    color: '#15803d',
+  },
+  statusTextUpcoming: {
+    color: '#1d4ed8',
+  },
+  statusTextCompleted: {
+    color: '#4b5563',
+  },
+  dateSection: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  dateRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  dateLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  dateText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  arrow: {
+    color: '#9ca3af',
+    marginHorizontal: 8,
+  },
+  locationSection: {
+    marginBottom: 12,
+  },
+  locationLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  locationText: {
+    fontSize: 14,
+    color: '#374151',
+  },
+  priceActionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  priceLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  priceText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2563eb',
+  },
+  viewDetailsButton: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 12,
+  },
+  viewDetailsText: {
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 80,
+  },
+  emptyEmoji: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    color: '#9ca3af',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  emptySubtitle: {
+    color: '#9ca3af',
+    fontSize: 14,
+    marginTop: 8,
+  },
+});

@@ -1,7 +1,6 @@
-
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
-import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ListCar() {
   const [brand, setBrand] = useState('')
@@ -65,107 +64,105 @@ export default function ListCar() {
     Alert.alert("Car has been listed", `Your ${year} ${brand} in ${location} has now been listed for ${price} per day`);
   };
 
-
-
   return (
-    <View className="flex-1 bg-gray-50">
-      <View className="pt-16 pb-6 px-6 bg-white shadow-sm">
-        <Text className="text-3xl font-bold text-gray-900 mb-2">List Car page </Text>
-        <Text className="text-lg text-gray-600">Fill in your car details</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>List Car page </Text>
+        <Text style={styles.subtitle}>Fill in your car details</Text>
       </View>
 
-      <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-        <View className="mt-6">
-          <Text className="text-lg font-semibold text-gray-800 mb-3"> Car brand</Text>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.section}>
+          <Text style={styles.label}> Car brand</Text>
           <TextInput
             placeholder="e.g. Hyundai, BMW, Audi"
             value={brand}
             onChangeText={setBrand}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">Car model</Text>
+        <View style={styles.section}>
+          <Text style={styles.label}>Car model</Text>
           <TextInput
             placeholder="e.g. Civic, X5, RS7"
             value={model}
             onChangeText={setModel}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">Year</Text>
+        <View style={styles.section}>
+          <Text style={styles.label}>Year</Text>
           <TextInput
             placeholder="e.g 2023,2024,2025"
             value={year}
             onChangeText={setYear}
             keyboardType={"numeric"}
             maxLength={4}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">Daily price $ </Text>
+        <View style={styles.section}>
+          <Text style={styles.label}>Daily price $ </Text>
           <TextInput
             placeholder="eg. 45$, 99$,999$"
             value={price}
             onChangeText={setPrice}
             keyboardType={"numeric"}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">Location of the car </Text>
+        <View style={styles.section}>
+          <Text style={styles.label}>Location of the car </Text>
           <TextInput
             placeholder="eg. Odense, Aarhus, Copenhagen"
             value={location}
             onChangeText={setLocation}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">Car Equipment</Text>
+        <View style={styles.section}>
+          <Text style={styles.label}>Car Equipment</Text>
           <TextInput
             placeholder="e.g. Air conditioning, Sunroof"
             value={details}
             onChangeText={setDetails}
-            className="bg-white border border-gray-300 rounded-xl px-4 py-4 text-lg"
+            style={styles.input}
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View className="mt-8 mb-8">
+        <View style={styles.submitSection}>
           <TouchableOpacity
-            className="bg-gray-200 border-2 border-gray-300 border-dashed rounded-xl py-4 mb-4"
+            style={styles.uploadButton}
             activeOpacity={0.7}
             onPress={pickImages} >
-            <Text className="text-center text-gray-700 text-lg font-medium">
+            <Text style={styles.uploadText}>
               Upload images of the car {images.length > 0 ? `(${images.length} selected)` : ''}
             </Text>
           </TouchableOpacity>
 
           {images.length > 0 && (
-            <ScrollView horizontal className="mb-4">
-              <View className="flex-row space-x-2">
+            <ScrollView horizontal style={styles.imageScroll}>
+              <View style={styles.imageRow}>
                 {images.map((uri, index) => (
-                  <View key={index} className="relative">
+                  <View key={index} style={styles.imageContainer}>
                     <Image
                       source={{ uri }}
-                      className="w-20 h-20 rounded-lg" />
+                      style={styles.image} />
                     <TouchableOpacity
-                      className="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 items-center justify-center"
+                      style={styles.removeButton}
                       onPress={() => setImages(prev => prev.filter((_, i) => i !== index))} >
-                      <Text className="text-white text-xs">x</Text>
+                      <Text style={styles.removeText}>x</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -176,50 +173,50 @@ export default function ListCar() {
 
           <TouchableOpacity
             onPress={handleSubmit}
-            className={"bg-blue-600 rounded-xl py-4 shadow-lg"}
+            style={styles.submitButton}
             activeOpacity={0.8}
           >
-            <Text className={"text-white text-center text-xl font-semibold"}>List my car</Text>
+            <Text style={styles.submitText}>List my car</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="mt-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4"> Your listed cars ({listedCars.length})</Text>
+        <View style={styles.listedSection}>
+          <Text style={styles.listedTitle}> Your listed cars ({listedCars.length})</Text>
 
-          {listedCars.length == 0 ? (
-            <Text className="text-gray-500 text-center py-8">No cars has been listed yet.</Text>
+          {listedCars.length === 0 ? (
+            <Text style={styles.noCarsText}>No cars has been listed yet.</Text>
           ) : (
             listedCars.map((car) => (
-              <View key={car.id} className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-200">
+              <View key={car.id} style={styles.carCard}>
 
                 {car.images && car.images.length > 0 ? (
-                  <View className="mb-3">
+                  <View style={styles.imageSection}>
                     <Image
                       source={{ uri: car.images[0] }}
-                      className="w-full h-40 rounded-lg mb-2"
+                      style={styles.carImage}
                     />
-                    <Text className="text-blue-500 text-sm">
+                    <Text style={styles.imageCount}>
                       📸 {car.images.length} image{car.images.length > 1 ? 's' : ''}
                     </Text>
                   </View>
                 ) : (
-                  <View className="bg-gray-100 w-full h-40 rounded-lg mb-3 items-center justify-center">
-                    <Text className="text-gray-400">No images</Text>
+                  <View style={styles.noImagePlaceholder}>
+                    <Text style={styles.noImageText}>No images</Text>
                   </View>
                 )}
 
-                <Text className="text-lg font-bold text-gray-800">{car.year} {car.brand} {car.model}</Text>
-                <Text className="text-gray-600">Location: {car.location}</Text>
-                <Text className="text-green-600 font-semibold">${car.price}/day</Text>
-                <Text className="text-gray-400 text-sm">Listed: {car.listedAt}</Text>
+                <Text style={styles.carTitle}>{car.year} {car.brand} {car.model}</Text>
+                <Text style={styles.carLocation}>Location: {car.location}</Text>
+                <Text style={styles.carPrice}>${car.price}/day</Text>
+                <Text style={styles.carListedAt}>Listed: {car.listedAt}</Text>
 
                 <TouchableOpacity
-                  className="bg-red-100 rounded-lg py-2 mt-3"
+                  style={styles.removeListingButton}
                   onPress={() => {
                     setListedCars(prevCars => prevCars.filter(c => c.id !== car.id))
                   }}
                 >
-                  <Text className="text-red-600 text-center font-medium">Remove listing</Text>
+                  <Text style={styles.removeListingText}>Remove listing</Text>
                 </TouchableOpacity>
               </View>
             ))
@@ -231,3 +228,197 @@ export default function ListCar() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  header: {
+    paddingTop: 64,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#4b5563',
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+  section: {
+    marginTop: 24,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: 12,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    fontSize: 18,
+  },
+  uploadButton: {
+    backgroundColor: '#e5e7eb',
+    borderWidth: 2,
+    borderColor: '#d1d5db',
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    paddingVertical: 16,
+    marginBottom: 16,
+  },
+  uploadText: {
+    textAlign: 'center',
+    color: '#374151',
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  imageScroll: {
+    marginBottom: 16,
+  },
+  imageRow: {
+    flexDirection: 'row',
+  },
+  imageContainer: {
+    position: 'relative',
+    marginHorizontal: 4,
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  removeButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: '#ef4444',
+    borderRadius: 50,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  removeText: {
+    color: '#ffffff',
+    fontSize: 12,
+  },
+  submitSection: {
+    marginTop: 32,
+    marginBottom: 32,
+  },
+  submitButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 12,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+  },
+  submitText: {
+    color: '#ffffff',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  listedSection: {
+    marginTop: 32,
+  },
+  listedTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: 16,
+  },
+  noCarsText: {
+    color: '#6b7280',
+    textAlign: 'center',
+    paddingVertical: 32,
+  },
+  carCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 1,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  imageSection: {
+    marginBottom: 12,
+  },
+  carImage: {
+    width: '100%',
+    height: 160,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  imageCount: {
+    color: '#3b82f6',
+    fontSize: 14,
+  },
+  noImagePlaceholder: {
+    backgroundColor: '#f3f4f6',
+    width: '100%',
+    height: 160,
+    borderRadius: 8,
+    marginBottom: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noImageText: {
+    color: '#9ca3af',
+  },
+  carTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1f2937',
+  },
+  carLocation: {
+    color: '#4b5563',
+  },
+  carPrice: {
+    color: '#16a34a',
+    fontWeight: '600',
+  },
+  carListedAt: {
+    color: '#9ca3af',
+    fontSize: 14,
+  },
+  removeListingButton: {
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    paddingVertical: 8,
+    marginTop: 12,
+  },
+  removeListingText: {
+    color: '#dc2626',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+});
