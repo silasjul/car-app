@@ -1,16 +1,16 @@
-import { Router, type Request, type Response } from 'express';
-import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { Router, type Request, type Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../utils/prisma.js';
+import { z } from 'zod';
 import { authSchema } from '../schemas/auth.js';
+import { prisma } from '../utils/prisma.js';
 
 const router = Router();
 
 // POST signup
 router.post('/auth/signup', async (req: Request, res: Response) => {
   try {
-    const { email, password } = authSchema.parse(req.body);
+    const { firstName, lastName, email, password } = authSchema.parse(req.body);
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -26,6 +26,8 @@ router.post('/auth/signup', async (req: Request, res: Response) => {
     // Create user
     const user = await prisma.user.create({
       data: {
+        firstName,
+        lastName,
         email,
         password: hashedPassword,
       },

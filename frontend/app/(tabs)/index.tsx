@@ -62,11 +62,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: 'Bold',
     opacity: .9
   },
   subtitle: {
     fontSize: 18,
+    fontFamily: 'Book',
     textAlign: 'center',
     marginTop: 5,
     opacity: .65,
@@ -90,9 +91,9 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   textInput: {
+    fontFamily: 'Medium',
     flex: 1,
     alignItems: "center",
-    fontWeight: 500,
     fontSize: 16,
   },
   datePickerContainer: {
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   },
   searchText: {
     color: 'white',
-    fontWeight: 500,
+    fontFamily: 'Medium',
     fontSize: 16,
   },
 });

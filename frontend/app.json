@@ -33,6 +33,37 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ], 
+       [
+        "expo-font",
+        {
+          "fonts": ["./path/to/file.ttf"],
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Neue-Montreal",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/PPNeueMontreal-Thin.otf",
+                    "weight": 300
+                  },
+                  {
+                    "path": "./assets/fonts/PPNeueMontreal-Book.otf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./assets/fonts/PPNeueMontreal-Medium.otf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./assets/fonts/PPNeueMontreal-Bold.otf",
+                    "weight": 600
+                  }
+                ]
+              }
+            ]
+          }
+        }
       ]
     ],
     "experiments": {
