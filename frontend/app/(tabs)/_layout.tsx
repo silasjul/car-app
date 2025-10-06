@@ -19,13 +19,17 @@ export default function TabLayout() {
         title: 'Rentals',
         tabBarIcon: ({ color, size }) => <Ionicons name="car" color={color} size={size} />
       }} />
+      <Tabs.Screen name="list-car" options={{
+        title: 'List',
+        tabBarIcon: ({ color, size }) => <Ionicons name="add-circle" color={color} size={size} />
+      }} />
       <Tabs.Screen name="favorites" options={{
         title: 'Favorite',
         tabBarIcon: ({ color, size }) => <Ionicons name="heart" color={color} size={size} />
       }} />
-      <Tabs.Screen name="list-car" options={{
-        title: 'List',
-        tabBarIcon: ({ color, size }) => <Ionicons name="add-circle" color={color} size={size} />
+      <Tabs.Screen name="profile" options={{
+        title: 'Profile',
+        tabBarIcon: ({ color, size }) => <Ionicons name="person" color={color} size={size} />
       }} />
     </Tabs>
   );
