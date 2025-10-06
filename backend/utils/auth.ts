@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express';
+import { type NextFunction, type Request, type Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from './prisma.js';
 
@@ -25,13 +25,13 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid token' });
+      return res.status(401).json({ error: 'Invalid token', isValid: false });
     }
 
     req.user = user;
     next();
   } catch (error) {
     console.error('Auth middleware error:', error);
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'Invalid token', isValid: false });
   }
 };

@@ -1,5 +1,6 @@
 import { useFonts } from 'expo-font';
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useEffect } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { AuthProvider, useAuth } from "../hooks/useAuth";
 
@@ -31,7 +32,14 @@ export default function RootLayout() {
 }
 
 function App() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, deleteToken } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/(tabs)');
+    }
+  }, [isAuthenticated, router]);
 
   // Loading screen while checking for token
   if (isLoading) return (
@@ -43,7 +51,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <Stack>
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="welcome" options={{ headerShown: false, title: '' }} />
       </Stack>
     );
   }

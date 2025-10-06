@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import React from 'react'
 import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
@@ -6,21 +6,24 @@ export default function Welcome() {
   const router = useRouter()
 
   return (
-    <ImageBackground source={require('@/assets/images/welcome-bg.jpg')} style={styles.background} resizeMode="cover">
-      <View style={styles.container}>
-        <Image source={require('@/assets/images/logo-white.png')} style={styles.logo} />
-        <Text style={styles.title}>Rent a car anywhere in the world</Text>
-        <Text style={styles.subtitle}>Where would you go if you could go anywhere?</Text>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.signupBtn} onPress={() => router.push('/signup')}>
-            <Text style={styles.signupText}>Sign up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/login')}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ImageBackground source={require('@/assets/images/welcome-bg.jpg')} style={styles.background} resizeMode="cover">
+        <View style={styles.container}>
+          <Image source={require('@/assets/images/logo-white.png')} style={styles.logo} />
+          <Text style={styles.title}>Rent a car anywhere in the world</Text>
+          <Text style={styles.subtitle}>Where would you go if you could go anywhere?</Text>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity style={styles.signupBtn} onPress={() => router.push('/signup')}>
+              <Text style={styles.signupText}>Sign up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/login')}>
+              <Text style={styles.loginText}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </>
   )
 }
 

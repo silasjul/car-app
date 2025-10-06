@@ -1,36 +1,36 @@
 import axios, { isAxiosError } from 'axios'
+import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 import { useAuth } from './useAuth'
 
-interface SignupData {
-  firstName: string
-  lastName: string
+interface LoginData {
   email: string
   password: string
 }
 
-interface SignupResponse {
+interface LoginResponse {
   token: string
 }
 
-export function useSignup() {
+export function useLogin() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const { saveToken } = useAuth()
 
-  const signup = async (signupData: SignupData) => {
+  const login = async (signupData: LoginData) => {
     setIsLoading(true)
     setError(null)
 
     try {
-      // Create account
-      const response = await axios.post<SignupResponse>(
-        `http://192.168.1.105:3000/auth/signup`,
+      // Login user
+      const response = await axios.post<LoginResponse>(
+        `http://192.168.1.105:3000/auth/login`,
         signupData
       )
 
       // Save token
       const { token } = response.data
+      console.log("Login request succesfull")
       saveToken(token)
 
     } catch (err) {
@@ -51,7 +51,7 @@ export function useSignup() {
   }
 
   return {
-    signup,
+    login,
     isLoading,
     error
   }

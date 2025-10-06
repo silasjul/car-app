@@ -2,7 +2,8 @@ import bcrypt from 'bcryptjs';
 import { Router, type Request, type Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import { authSchema } from '../schemas/auth.js';
+import { loginSchema, signupSchema } from '../schemas/auth.js';
+import { requireAuth } from '../utils/auth.js';
 import { prisma } from '../utils/prisma.js';
 
 const router = Router();
@@ -10,7 +11,7 @@ const router = Router();
 // POST signup
 router.post('/auth/signup', async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password } = authSchema.parse(req.body);
+    const { firstName, lastName, email, password } = signupSchema.parse(req.body);
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -49,7 +50,7 @@ router.post('/auth/signup', async (req: Request, res: Response) => {
 // POST login
 router.post('/auth/login', async (req: Request, res: Response) => {
   try {
-    const { email, password } = authSchema.parse(req.body);
+    const { email, password } = loginSchema.parse(req.body);
 
     // Find user
     const user = await prisma.user.findUnique({
@@ -71,11 +72,17 @@ router.post('/auth/login', async (req: Request, res: Response) => {
     res.status(200).json({ token });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation failed', details: error.issues });
+      console.error(error.issues)
+      return res.status(400).json({ error: 'Validation failed: Not a valid email or password', details: error.issues });
     }
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'Failed to log in' });
   }
+});
+
+// POST check-token
+router.post('/auth/check-token', requireAuth, async (_: Request, res: Response) => {
+    res.status(200).json({ isValid: true  });
 });
 
 export default router;
